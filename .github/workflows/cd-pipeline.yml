@@ -37,6 +37,10 @@ jobs:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
       
+      - name: Create Staging Namespace
+        run: |
+          kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Create or Update Staging Secrets
         run: |
           kubectl create secret generic ecomm-secrets-staging \
@@ -71,6 +75,7 @@ jobs:
 
   deploy_to_production:
     runs-on: ubuntu-latest
+    needs: deploy_to_staging
     # if: github.ref == 'refs/heads/main'
     environment: Production
 
@@ -88,6 +93,10 @@ jobs:
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+
+      - name: Create Production Namespace
+        run: |
+          kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Create or Update Production Secrets
         run: |
