@@ -12,8 +12,8 @@ on:
 
 env:
   ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
-  AKS_CLUSTER_NAME: 'SIT722-AKS-Cluster'
-  AKS_RESOURCE_GROUP: 'SIT722-8-1P-RG'
+  AKS_CLUSTER_NAME: 'SIT722-HD-AKS-Cluster'
+  AKS_RESOURCE_GROUP: 'SIT722-HD-RG'
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -71,7 +71,7 @@ jobs:
 
   deploy_to_production:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     environment: Production
 
     steps:
