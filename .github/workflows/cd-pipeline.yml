@@ -110,7 +110,7 @@ jobs:
           kubectl rollout status deployment/frontend-production -n production
           kubectl rollout status deployment/product-service-production -n production
           kubectl rollout status deployment/order-service-production -n production
-          echo "✅ All services deployed to production successfully!"
+          echo "All services deployed to production successfully!"
 
       - name: Logout from Azure
         if: always() # Always run this step
