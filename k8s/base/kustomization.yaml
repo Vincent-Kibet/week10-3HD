@@ -5,11 +5,14 @@ kind: Kustomization
 images:
   - name: frontend
     newName: sit722hdvincentacr.azurecr.io/frontend
+    newTag: latest
   - name: product-service
     newName: sit722hdvincentacr.azurecr.io/product_service
+    newTag: latest
   - name: order-service
     newName: sit722hdvincentacr.azurecr.io/order_service
-    
+    newTag: latest
+
 # List all common resource files 
 resources:
   - configmaps.yaml
