@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: product-service-container
-        image: sit722hdvincentacr.azurecr.io/product_service # ✅ UPDATED
+        image: sit722hdvincentacr.azurecr.io/product_service:latest 
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
