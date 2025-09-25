@@ -14,4 +14,7 @@ resources:
 
 patches:
   - path: config-map.yaml
-  
+  - path: ecomm-config-patch.yaml
+    target:
+      kind: ConfigMap
+      name: ecomm-config
