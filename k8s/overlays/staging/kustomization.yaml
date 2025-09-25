@@ -13,5 +13,5 @@ resources:
   - namespace.yaml
 
 patches:
-  - config-map.yaml
+  - path: config-map.yaml
   
