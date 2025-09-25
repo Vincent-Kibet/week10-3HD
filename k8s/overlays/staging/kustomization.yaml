@@ -8,6 +8,18 @@ nameSuffix: -staging
 # Set the namespace for all resources.
 namespace: staging
 
+images:
+  - name: frontend
+    newName: sit722hdvincentacr.azurecr.io/frontend
+    newTag: latest
+  - name: product_service 
+    newName: sit722hdvincentacr.azurecr.io/product_service
+    newTag: latest
+  - name: order_service 
+    newName: sit722hdvincentacr.azurecr.io/order_service
+    newTag: latest
+    
+
 resources:
   - ../../base
   - namespace.yaml
