@@ -3,17 +3,9 @@
 name: CI - Test, Build and Push Images
 
 on:
-  pull_request:
-    branches:
-      - main
-      - develop # Triggers on Pull Requests targeting the 'develop' branch
-    paths:
-      - 'backend/**'
-      - 'frontend/**'
-      - '.github/workflows/ci-pipeline.yml'
   push:
     branches:
-      - main
+      - develop
     paths:
       - 'backend/**'
       - 'frontend/**'
