@@ -1,8 +1,13 @@
-# k8s/overlays/production/config-map.yaml
+# k8s/overlays/staging/config-map.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: frontend-config
+  name: ecomm-config
 data:
-  PRODUCT_API_URL: "http://product-service-production:8000"
-  ORDER_API_URL: "http://order-service-production:8001"
+  PRODUCTS_DB_NAME: products-staging
+  ORDERS_DB_NAME: orders-staging
+  POSTGRES_HOST: order-db-service-staging 
+  AZURE_STORAGE_CONTAINER_NAME: product-images-staging
+  AZURE_SAS_TOKEN_EXPIRY_HOURS: "24"
+  PRODUCT_SERVICE_URL: http://product-service-staging:8000
+  ORDER_SERVICE_URL: http://order-service-staging:8001
