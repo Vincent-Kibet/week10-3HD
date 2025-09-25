@@ -7,7 +7,7 @@ namespace: production
 
 resources:
   - ../../base/configmaps.yaml
-  - ../../base/secrets.yaml  <- REMOVE THIS LINE
+  - ../../base/secrets.yaml  
   - ../../base/product-db.yaml
   - ../../base/order-db.yaml
   - ../../base/product-service.yaml
