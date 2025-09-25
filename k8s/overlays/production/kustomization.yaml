@@ -8,6 +8,7 @@ nameSuffix: -production
 # Set the namespace for all resources.
 namespace: production
 
+# Resource
 resources:
   - ../../base
   - namespace.yaml
