@@ -12,6 +12,6 @@ resources:
   - ../../base
   - namespace.yaml
 
-patchesStrategicMerge:
+patches:
   - config-map.yaml
   

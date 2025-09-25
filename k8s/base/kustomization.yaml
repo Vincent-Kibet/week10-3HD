@@ -2,7 +2,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# List all common resource files located in this 'base' directory.
+images:
+  - name: frontend
+    newName: sit722hdvincentacr.azurecr.io/frontend
+  - name: product-service
+    newName: sit722hdvincentacr.azurecr.io/product_service
+  - name: order-service
+    newName: sit722hdvincentacr.azurecr.io/order_service
+    
+# List all common resource files 
 resources:
   - configmaps.yaml
   - frontend.yaml
