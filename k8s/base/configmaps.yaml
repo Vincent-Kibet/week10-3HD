@@ -7,6 +7,7 @@ data:
   PRODUCTS_DB_NAME: products
   ORDERS_DB_NAME: orders
   POSTGRES_HOST: order-db-service 
+  PRODUCT_DB_HOST: product-db-service
   AZURE_STORAGE_CONTAINER_NAME: product-images
   AZURE_SAS_TOKEN_EXPIRY_HOURS: "24"
   PRODUCT_SERVICE_URL: http://product-service:8000

@@ -7,6 +7,7 @@ data:
   PRODUCTS_DB_NAME: products-staging
   ORDERS_DB_NAME: orders-staging
   POSTGRES_HOST: order-db-service-staging 
+  PRODUCT_DB_HOST: product-db-service-staging
   AZURE_STORAGE_CONTAINER_NAME: product-images-staging
   AZURE_SAS_TOKEN_EXPIRY_HOURS: "24"
   PRODUCT_SERVICE_URL: http://product-service-staging:8000
