@@ -60,7 +60,7 @@ jobs:
           kubectl rollout status deployment/frontend-staging -n staging
           kubectl rollout status deployment/product-service-staging -n staging
           kubectl rollout status deployment/order-service-staging -n staging
-          echo "✅ All services deployed to staging successfully!"
+          echo "All services deployed to staging successfully!"
 
       - name: Logout from Azure
         if: always()
