@@ -19,7 +19,7 @@ env:
 jobs:
   deploy_to_staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
+    # if: github.ref == 'refs/heads/develop'
     environment: Staging
 
     steps:
