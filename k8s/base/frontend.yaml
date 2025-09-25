@@ -1,12 +1,9 @@
 # k8s/frontend.yaml
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-config
 data:
-  # These are the internal Kubernetes DNS names for your backend services.
-  # This allows the frontend to communicate with the backend inside the cluster.
   PRODUCT_API_URL: "http://product-service:8000"
   ORDER_API_URL: "http://order-service:8001"
 ---

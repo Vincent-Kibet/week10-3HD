@@ -1,37 +1,36 @@
 # .github/workflows/ci-pipeline.yml
-
-name: CI - Test, Build and Push Images
+name: CI - Test, Build and Push Images # Workflow CI name
 
 on:
-  push:
-    branches:
+  push: # Trigger on push
+    branches: # On specific branches
       - develop
-    paths:
+    paths: # For specific paths
       - 'backend/**'
       - 'frontend/**'
 
-env:
-  ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }} # Your ACR login server, e.g., sit722acrvincent.azurecr.io
-  IMAGE_TAG: ${{ github.sha }} # Use the unique Git commit SHA as the image tag
+env: # Global environment variables
+  ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }} 
+  IMAGE_TAG: ${{ github.sha }} 
 
 jobs:
-  test_backend:
-    runs-on: ubuntu-latest
-    services:
-      product_db:
+  test_backend: # Backend testing job
+    runs-on: ubuntu-latest # Use ubuntu runner
+    services: # Define test services
+      product_db: # Product database service
         image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: products
-        options: >-
+        options: >- # Database health checks
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
           - 5432:5432
-      order_db:
+      order_db: # Order database service
         image: postgres:15
         env:
           POSTGRES_USER: postgres
@@ -39,23 +38,23 @@ jobs:
           POSTGRES_DB: orders
         ports:
           - 5433:5432
-        options: >-
+        options: >- # Database health checks
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
-    steps:
+    steps: # Job execution steps
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Get repository code
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # Setup Python environment
         with:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: |
+        run: | # Install Python packages
           pip install --upgrade pip
           for req in backend/*/requirements.txt; do
             pip install -r "$req"
@@ -63,57 +62,57 @@ jobs:
           pip install pytest httpx
       
       - name: Run product_service tests
-        working-directory: backend/product_service
-        env:
+        working-directory: backend/product_service # Specify test directory
+        env: # Set test variables
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_DB: products
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        run: pytest tests --maxfail=1 --disable-warnings -q
+        run: pytest tests --maxfail=1 --disable-warnings -q # Run product tests
 
       - name: Run order_service tests
-        working-directory: backend/order_service
-        env:
+        working-directory: backend/order_service # Specify test directory
+        env: # Set test variables
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5433
           POSTGRES_DB: orders
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        run: pytest tests --maxfail=1 --disable-warnings -q
+        run: pytest tests --maxfail=1 --disable-warnings -q # Run order tests
 
-  build_and_push:
-    runs-on: ubuntu-latest
-    needs: test_backend # This job runs only if tests pass
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+  build_and_push: # Build and push job
+    runs-on: ubuntu-latest # Use ubuntu runner
+    needs: test_backend # Run after tests
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) # Run on push/merge
 
-    steps:
+    steps: # Job execution steps
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4 # Get repository code
 
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v1 # Log into Azure
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Login to Azure Container Registry
-      run: az acr login --name ${{ env.ACR_LOGIN_SERVER }}
+      run: az acr login --name ${{ env.ACR_LOGIN_SERVER }} # Log into ACR
 
     - name: Build and Push Product Service Image
-      run: |
+      run: | # Build product image
         docker build -t ${{ env.ACR_LOGIN_SERVER }}/product_service:latest ./backend/product_service/
         docker push ${{ env.ACR_LOGIN_SERVER }}/product_service:latest
     
     - name: Build and Push Order Service Image
-      run: |
+      run: | # Build order image
         docker build -t ${{ env.ACR_LOGIN_SERVER }}/order_service:latest ./backend/order_service/
         docker push ${{ env.ACR_LOGIN_SERVER }}/order_service:latest
 
     - name: Build and Push Frontend Image
-      run: |
+      run: | # Build frontend image
         docker build -t ${{ env.ACR_LOGIN_SERVER }}/frontend:latest ./frontend/
         docker push ${{ env.ACR_LOGIN_SERVER }}/frontend:latest
 
     - name: Logout from Azure
-      if: always()
+      if: always() # Always run logout
       run: az logout

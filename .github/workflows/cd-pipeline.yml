@@ -1,47 +1,47 @@
 # .github/workflows/cd-pipeline.yml
-
-name: CD - Deploy Services to AKS
+# Workflow display name
+name: CD - Deploy Services to AKS 
 
 on:
-  pull_request:
+  pull_request: # Trigger on pull request
     branches:
-      - develop
-    paths:
+      - develop # Target develop branch
+    paths: # Only when files change
       - 'backend/**'
       - 'frontend/**'
 
-env:
+env: # Workflow environment variables
   ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
   AKS_CLUSTER_NAME: 'SIT722-HD-AKS-Cluster'
   AKS_RESOURCE_GROUP: 'SIT722-HD-RG'
-  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_TAG: ${{ github.sha }} # Use commit for tag
 
 jobs:
-  deploy_to_staging:
-    runs-on: ubuntu-latest
-    environment: Staging
+  deploy_to_staging: # Staging deployment job
+    runs-on: ubuntu-latest # Use GitHub runner
+    environment: Staging # Target staging environment
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Get the latest code
 
       - name: Azure Login
-        uses: azure/login@v1
+        uses: azure/login@v1 # Authenticate with Azure
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set Kubernetes context
-        uses: azure/aks-set-context@v3
+        uses: azure/aks-set-context@v3 # Connect to AKS cluster
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
       
       - name: Create Staging Namespace
-        run: |
+        run: | # Ensure namespace exists
           kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Create or Update Staging Secrets
-        run: |
+        run: | # Apply Kubernetes secrets
           kubectl create secret generic ecomm-secrets-staging \
             --namespace=staging \
             --from-literal=POSTGRES_USER='${{ secrets.POSTGRES_USER }}' \
@@ -51,11 +51,11 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Update Kustomize and Deploy to Staging
-        run: |
+        run: | # Deploy using Kustomize
           kubectl apply -k k8s/overlays/staging/
 
       - name: Verify staging deployments
-        run: |
+        run: | # Check deployment status
           echo "Waiting for staging deployments to roll out..."
           kubectl rollout status deployment/frontend-staging -n staging
           kubectl rollout status deployment/product-service-staging -n staging
@@ -63,35 +63,35 @@ jobs:
           echo "All services deployed to staging successfully!"
 
       - name: Logout from Azure
-        if: always()
+        if: always() # Always run this step
         run: az logout
 
-  deploy_to_production:
-    runs-on: ubuntu-latest
-    needs: deploy_to_staging
-    environment: Production
+  deploy_to_production: # Production deployment job
+    runs-on: ubuntu-latest # Use GitHub runner
+    needs: deploy_to_staging # Run after staging job
+    environment: Production # Target production environment
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Get the latest code
 
       - name: Azure Login
-        uses: azure/login@v1
+        uses: azure/login@v1 # Authenticate with Azure
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set Kubernetes context
-        uses: azure/aks-set-context@v3
+        uses: azure/aks-set-context@v3 # Connect to AKS cluster
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
 
       - name: Create Production Namespace
-        run: |
+        run: | # Ensure namespace exists
           kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Create or Update Production Secrets
-        run: |
+        run: | # Apply Kubernetes secrets
           kubectl create secret generic ecomm-secrets-production \
             --namespace=production \
             --from-literal=POSTGRES_USER='${{ secrets.POSTGRES_USER }}' \
@@ -101,11 +101,11 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Update Kustomize and Deploy to Production
-        run: |
+        run: | # Deploy using Kustomize
           kubectl apply -k k8s/overlays/production/
 
       - name: Verify production deployments
-        run: |
+        run: | # Check deployment status
           echo "Waiting for production deployments to roll out..."
           kubectl rollout status deployment/frontend-production -n production
           kubectl rollout status deployment/product-service-production -n production
@@ -113,5 +113,5 @@ jobs:
           echo "✅ All services deployed to production successfully!"
 
       - name: Logout from Azure
-        if: always()
+        if: always() # Always run this step
         run: az logout
