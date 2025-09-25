@@ -11,4 +11,7 @@ namespace: production
 resources:
   - ../../base
   - namespace.yaml
+
+patchesStrategicMerge:
   - config-map.yaml
+  
