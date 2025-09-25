@@ -52,11 +52,6 @@ jobs:
 
       - name: Update Kustomize and Deploy to Staging
         run: |
-          cd k8s/overlays/staging
-          kustomize edit set image frontend=${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
-          kustomize edit set image product_service=${{ env.ACR_LOGIN_SERVER }}/product_service:${{ env.IMAGE_TAG }}
-          kustomize edit set image order_service=${{ env.ACR_LOGIN_SERVER }}/order_service:${{ env.IMAGE_TAG }}
-          cd ../../../
           kubectl apply -k k8s/overlays/staging/
 
       - name: Verify staging deployments
@@ -107,11 +102,6 @@ jobs:
 
       - name: Update Kustomize and Deploy to Production
         run: |
-          cd k8s/overlays/production
-          kustomize edit set image frontend=${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
-          kustomize edit set image product_service=${{ env.ACR_LOGIN_SERVER }}/product_service:${{ env.IMAGE_TAG }}
-          kustomize edit set image order_service=${{ env.ACR_LOGIN_SERVER }}/order_service:${{ env.IMAGE_TAG }}
-          cd ../../../
           kubectl apply -k k8s/overlays/production/
 
       - name: Verify production deployments
