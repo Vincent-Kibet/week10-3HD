@@ -2,16 +2,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+# Add a suffix to all resource names.
 nameSuffix: -staging
+
+# Set the namespace for all resources.
 namespace: staging
 
+# ✅ Point to the entire base directory.
+bases:
+  - ../../base
+
+# ✅ List ONLY the resources specific to this staging overlay.
 resources:
-  - ../../base/configmaps.yaml
-  - ../../base/secrets.yaml  
-  - ../../base/product-db.yaml
-  - ../../base/order-db.yaml
-  - ../../base/product-service.yaml
-  - ../../base/order-service.yaml
-  - ../../base/frontend.yaml
   - namespace.yaml
   - config-map.yaml

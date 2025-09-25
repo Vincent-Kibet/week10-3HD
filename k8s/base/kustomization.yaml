@@ -1,0 +1,13 @@
+# k8s/base/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# List all common resource files located in this 'base' directory.
+resources:
+  - configmaps.yaml
+  - frontend.yaml
+  - order-db.yaml
+  - order-service.yaml
+  - product-db.yaml
+  - product-service.yaml
+  - secrets.yaml
