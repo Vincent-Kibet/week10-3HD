@@ -8,11 +8,7 @@ nameSuffix: -staging
 # Set the namespace for all resources.
 namespace: staging
 
-# ✅ Point to the entire base directory.
-bases:
-  - ../../base
-
-# ✅ List ONLY the resources specific to this staging overlay.
 resources:
+  - ../../base
   - namespace.yaml
   - config-map.yaml

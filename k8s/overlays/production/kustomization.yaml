@@ -8,11 +8,7 @@ nameSuffix: -production
 # Set the namespace for all resources.
 namespace: production
 
-# ✅ Point to the entire base directory.
-bases:
-  - ../../base
-
-# ✅ List ONLY the resources specific to this production overlay.
 resources:
+  - ../../base
   - namespace.yaml
   - config-map.yaml
