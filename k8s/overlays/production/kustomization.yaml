@@ -1,0 +1,17 @@
+# k8s/overlays/production/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+nameSuffix: -production
+namespace: production
+
+resources:
+  - ../../base/configmaps.yaml
+  - ../../base/secrets.yaml  <- REMOVE THIS LINE
+  - ../../base/product-db.yaml
+  - ../../base/order-db.yaml
+  - ../../base/product-service.yaml
+  - ../../base/order-service.yaml
+  - ../../base/frontend.yaml
+  - namespace.yaml
+  - config-map.yaml

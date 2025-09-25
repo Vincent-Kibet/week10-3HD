@@ -1,0 +1,8 @@
+# k8s/overlays/staging/config-map.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  PRODUCT_API_URL: "http://product-service-staging:8000"
+  ORDER_API_URL: "http://order-service-staging:8001"

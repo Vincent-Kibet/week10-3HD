@@ -1,0 +1,52 @@
+# k8s/frontend.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  # These are the internal Kubernetes DNS names for your backend services.
+  # This allows the frontend to communicate with the backend inside the cluster.
+  PRODUCT_API_URL: "http://product-service:8000"
+  ORDER_API_URL: "http://order-service:8001"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: sit722hdvincentacr.azurecr.io/frontend # ✅ UPDATED
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: frontend-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
