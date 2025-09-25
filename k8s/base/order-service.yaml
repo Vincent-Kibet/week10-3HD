@@ -35,7 +35,10 @@ spec:
           periodSeconds: 15
         env:
         - name: POSTGRES_HOST
-          value: order-db-service
+          valueFrom:
+            configMapKeyRef:
+              name: ecomm-config
+              key: POSTGRES_HOST
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
